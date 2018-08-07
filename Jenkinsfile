@@ -1,39 +1,19 @@
-podTemplate(label: 'mypod', containers: [
-    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
-  ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]
-  ) {
-    node('mypod') {
-        stage('Check running containers') {
-            container('docker') {
-                // example to show you can run docker commands when you mount the socket
-                sh 'sleep 20'
-                sh 'hostname'
-                sh 'hostname -i'
-                sh 'docker ps'
-            }
-        }
-
-        stage('Clone repository') {
-            container('git') {
-                sh 'whoami'
-                sh 'hostname -i'
-                sh 'git clone -b master https://github.com/darenjacobs/hello-world.git'
-            }
-        }
-
-        stage('Maven Build') {
-            container('maven') {
-                dir('hello-world-war/') {
-                    sh 'hostname'
-                    sh 'hostname -i'
-                    sh 'mvn --version'
-                }
-            }
+podTemplate(label: 'jenkins-node',
+) {
+    node ('jenkins-node') {
+        stage ('Switch to Utility Container') {
+           container('jenkins-node') {
+             sh ("echo 'Hello World!'")
+             sh ("ansible --version")
+             sh ("ant -version")
+             sh ("jq --version")
+             sh ("mvn --version")
+             sh ("packer --version")
+             sh ("whoami")
+             sh ("id -u jenkins")
+             sh ("env")
+             sh ("sleep 30")
+           }
         }
     }
 }
