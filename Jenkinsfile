@@ -1,8 +1,8 @@
-podTemplate(label: 'jenkins-node',
+podTemplate(label: 'jenkins-pod',
 ) {
-    node ('jenkins-node') {
+    node ('jenkins-pod') {
         stage ('Switch to Utility Container') {
-           container('jenkins-node') {
+           container('jenkins-pod') {
              sh ("echo 'Hello World!'")
              sh ("ansible --version")
              sh ("ant -version")
